@@ -1,0 +1,7 @@
+{
+  "name": "landing-saas",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
