@@ -4,9 +4,15 @@ import { TenantGuard } from './core/guards/tenant-guard';
 import { SuscripcionGuard } from './core/guards/suscripcion.guard';
 
 const routes: Routes = [
-  // Landing pública
+  // ✅ LOGIN COMO PÁGINA PRINCIPAL
   {
     path: '',
+    loadChildren: () => import('./tenant/login/login.module').then(m => m.LoginPageModule)
+  },
+  
+  // Landing pública (ahora en /landing)
+  {
+    path: 'landing',
     loadChildren: () => import('./landing/landing.module').then(m => m.LandingPageModule)
   },
   
