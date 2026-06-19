@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../core/services/supabase.service';
 import { CartService } from '../core/services/cart.service';
 
@@ -18,7 +18,7 @@ export class LandingPage implements OnInit, OnDestroy {
   cartItemCount = 0;
   busquedaProducto = '';
   productosFiltrados: any[] = [];
-  productoOferta: any = null; // Producto destacado seleccionado
+  productoOferta: any = null;
   
   isScrolled = false;
   isMobile = false;
@@ -27,28 +27,29 @@ export class LandingPage implements OnInit, OnDestroy {
   constructor(
     private supabase: SupabaseService,
     private router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private route: ActivatedRoute  // ✅ AÑADIR ActivatedRoute
   ) {}
 
   async ngOnInit() {
-  await this.cargarCliente();
-  
-  this.cartService.cart$.subscribe(() => {
-    this.cartItemCount = this.cartService.getItemCount();
-  });
-  
-  this.checkScreenSize();
-  
-  // 🔍 DEBUG: Verificar variables CSS
-  setTimeout(() => {
-    const root = document.documentElement;
-    console.log('🎨 Variables CSS aplicadas:', {
-      fondo: root.style.getPropertyValue('--color-fondo-custom'),
-      texto: root.style.getPropertyValue('--color-texto-custom'),
-      primario: root.style.getPropertyValue('--color-primario-custom')
+    await this.cargarCliente();
+    
+    this.cartService.cart$.subscribe(() => {
+      this.cartItemCount = this.cartService.getItemCount();
     });
-  }, 1000);
-}
+    
+    this.checkScreenSize();
+    
+    // 🔍 DEBUG: Verificar variables CSS
+    setTimeout(() => {
+      const root = document.documentElement;
+      console.log('🎨 Variables CSS aplicadas:', {
+        fondo: root.style.getPropertyValue('--color-fondo-custom'),
+        texto: root.style.getPropertyValue('--color-texto-custom'),
+        primario: root.style.getPropertyValue('--color-primario-custom')
+      });
+    }, 1000);
+  }
 
   ngOnDestroy() {
     this.menuOpen = false;
@@ -83,8 +84,10 @@ export class LandingPage implements OnInit, OnDestroy {
   async cargarCliente() {
     this.cargando = true;
     
-    const params = new URLSearchParams(window.location.search);
-    const subdominio = params.get('subdominio') || 'minegocio';
+    // ✅ CORRECCIÓN: Leer subdominio desde la ruta o query params
+    const subdominio = this.route.snapshot.params['subdominio'] || 
+                       this.route.snapshot.queryParams['subdominio'] || 
+                       '';
     
     if (!subdominio) {
       this.error = 'No se encontró el negocio';
@@ -168,32 +171,31 @@ export class LandingPage implements OnInit, OnDestroy {
     }
   }
 
-  // 🔑 NUEVO: Aplicar estilos personalizados como variables CSS
   // 🔑 MÉTODO PARA APLICAR ESTILOS PERSONALIZADOS
-aplicarEstilosPersonalizados() {
-  const root = document.documentElement;
-  
-  // Aplicar variables CSS dinámicas
-  root.style.setProperty('--color-primario-custom', this.cliente.color_primario || '#6b21a8');
-  root.style.setProperty('--color-secundario-custom', this.cliente.color_secundario || '#7c3aed');
-  root.style.setProperty('--color-fondo-custom', this.cliente.color_fondo || '#000000');
-  root.style.setProperty('--color-texto-custom', this.cliente.color_texto || '#ffffff');
-  root.style.setProperty('--color-acento-custom', this.cliente.color_acento || '#8b5cf6');
-  
-  // Aplicar tamaños de fuente
-  root.style.setProperty('--fuente-titulo', this.cliente.fuente_titulo || '3rem');
-  root.style.setProperty('--fuente-subtitulo', this.cliente.fuente_subtitulo || '1.2rem');
-  root.style.setProperty('--fuente-texto', this.cliente.fuente_texto || '1rem');
-  
-  // Aplicar border radius
-  root.style.setProperty('--boton-radius', this.cliente.boton_border_radius || '12px');
-  
-  console.log('✅ Estilos personalizados aplicados:', {
-    fondo: this.cliente.color_fondo,
-    texto: this.cliente.color_texto,
-    primario: this.cliente.color_primario
-  });
-}
+  aplicarEstilosPersonalizados() {
+    const root = document.documentElement;
+    
+    // Aplicar variables CSS dinámicas
+    root.style.setProperty('--color-primario-custom', this.cliente.color_primario || '#6b21a8');
+    root.style.setProperty('--color-secundario-custom', this.cliente.color_secundario || '#7c3aed');
+    root.style.setProperty('--color-fondo-custom', this.cliente.color_fondo || '#000000');
+    root.style.setProperty('--color-texto-custom', this.cliente.color_texto || '#ffffff');
+    root.style.setProperty('--color-acento-custom', this.cliente.color_acento || '#8b5cf6');
+    
+    // Aplicar tamaños de fuente
+    root.style.setProperty('--fuente-titulo', this.cliente.fuente_titulo || '3rem');
+    root.style.setProperty('--fuente-subtitulo', this.cliente.fuente_subtitulo || '1.2rem');
+    root.style.setProperty('--fuente-texto', this.cliente.fuente_texto || '1rem');
+    
+    // Aplicar border radius
+    root.style.setProperty('--boton-radius', this.cliente.boton_border_radius || '12px');
+    
+    console.log('✅ Estilos personalizados aplicados:', {
+      fondo: this.cliente.color_fondo,
+      texto: this.cliente.color_texto,
+      primario: this.cliente.color_primario
+    });
+  }
 
   // ============================================
   // FUNCIONES

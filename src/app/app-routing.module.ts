@@ -10,7 +10,7 @@ const routes: Routes = [
     loadChildren: () => import('./tenant/login/login.module').then(m => m.LoginPageModule)
   },
   
-  // Landing pública (ahora en /landing)
+  // Landing pública (ruta explícita)
   {
     path: 'landing',
     loadChildren: () => import('./landing/landing.module').then(m => m.LandingPageModule)
@@ -100,6 +100,12 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
+  },
+  
+  // ✅ SUBDOMINIO DINÁMICO - AL FINAL (wildcard)
+  {
+    path: ':subdominio',
+    loadChildren: () => import('./landing/landing.module').then(m => m.LandingPageModule)
   },
   
   // Wildcard - SIEMPRE al final

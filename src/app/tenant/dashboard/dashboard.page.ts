@@ -123,38 +123,41 @@ export class DashboardPage implements OnInit, AfterViewInit {
     await this.tenantAuth.logout();
   }
 
-  async verMiNegocio() {
-    try {
-      let subdominio = this.usuario?.subdominio;
+ async verMiNegocio() {
+  try {
+    let subdominio = this.usuario?.subdominio;
 
-      if (!subdominio && this.usuario?.id) {
-        const { data, error } = await this.supabase.getClient()
-          .from('perfiles_clientes')
-          .select('subdominio')
-          .eq('id', this.usuario.id)
-          .single();
+    if (!subdominio && this.usuario?.id) {
+      const { data, error } = await this.supabase.getClient()
+        .from('perfiles_clientes')
+        .select('subdominio')
+        .eq('id', this.usuario.id)
+        .single();
 
-        if (error) throw error;
-        subdominio = data?.subdominio;
-      }
-
-      if (!subdominio) {
-        alert('No se encontró el subdominio de tu negocio.');
-        return;
-      }
-
-      const baseUrl = window.location.origin;
-      const url = `${baseUrl}/landing?subdominio=${subdominio}`;
-
-      if (this.isMobile()) {
-        window.location.href = url;
-      } else {
-        window.open(url, '_blank');
-      }
-    } catch (error) {
-      console.error('Error al abrir el negocio:', error);
+      if (error) throw error;
+      subdominio = data?.subdominio;
     }
+
+    if (!subdominio) {
+      alert('No se encontró el subdominio de tu negocio.');
+      return;
+    }
+
+    const baseUrl = window.location.origin;
+    
+    // ✅ NUEVA URL: /minegocio en lugar de /landing?subdominio=minegocio
+    const url = `${baseUrl}/${subdominio}`;
+
+    if (this.isMobile()) {
+      window.location.href = url;
+    } else {
+      window.open(url, '_blank');
+    }
+  } catch (error) {
+    console.error('Error al abrir el negocio:', error);
   }
+}
+
 
   private isMobile(): boolean {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
