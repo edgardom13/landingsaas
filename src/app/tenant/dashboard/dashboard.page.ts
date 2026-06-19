@@ -4,7 +4,6 @@ import { TenantAuthService } from '../../core/services/tenant-auth.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { SuscripcionService } from '../../core/services/suscripcion.service';
 import { IonContent } from '@ionic/angular';
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
@@ -59,7 +58,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
   private esperarUsuario(): Promise<void> {
     return new Promise((resolve) => {
       if (this.tenantAuth.isLoggedIn()) {
-        this.usuario = this.tenantAuth.getCurrentUser();
+        this.usuario = this. tenantAuth.getCurrentUser();
         resolve();
         return;
       }
@@ -145,7 +144,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
       }
 
       const baseUrl = window.location.origin;
-      const url = `${baseUrl}?subdominio=${subdominio}`;
+      const url = `${baseUrl}/landing?subdominio=${subdominio}`;
 
       if (this.isMobile()) {
         window.location.href = url;
