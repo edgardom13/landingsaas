@@ -1,0 +1,466 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="app-toolbar">
+    <div class="toolbar-inner">
+      <button type="button" routerLink="/tenant/dashboard" aria-label="Volver">
+        <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+      </button>
+      <h1>Personalizar</h1>
+      <button type="button" class="btn-save-header" (click)="guardar()" [disabled]="guardando">
+        <ion-spinner *ngIf="guardando" name="crescent"></ion-spinner>
+        <ion-icon name="checkmark-outline" *ngIf="!guardando" aria-hidden="true"></ion-icon>
+        <span *ngIf="!guardando">Guardar</span>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="dashboard-content" scrollY="true">
+  <div class="content-container">
+
+    <!-- Page Header -->
+    <header class="page-header">
+      <h1 class="page-title">Diseño de tu página</h1>
+      <p class="page-subtitle">Personaliza la apariencia de tu landing page</p>
+    </header>
+
+    <!-- GRID LAYOUT -->
+    <div class="settings-grid">
+
+      <!-- Logo del negocio -->
+      <section class="settings-card">
+        <div class="card-header">
+          <div class="header-icon">
+            <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
+          </div>
+          <div>
+            <h2 class="card-title">Logo del negocio</h2>
+            <p class="card-subtitle">Sube el logo que aparecerá en tu página</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="logo-upload-area">
+            <div class="logo-preview-wrapper">
+              <div class="logo-preview" *ngIf="perfil.logo_url">
+                <img [src]="perfil.logo_url" alt="Logo">
+              </div>
+              <div class="logo-placeholder" *ngIf="!perfil.logo_url">
+                <ion-icon name="business-outline" aria-hidden="true"></ion-icon>
+                <span>Sin logo</span>
+              </div>
+            </div>
+            <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml" (change)="subirLogo($event)" style="display: none" #logoInput>
+            <button type="button" class="btn-upload" (click)="logoInput.click()">
+              <ion-icon name="cloud-upload-outline" aria-hidden="true"></ion-icon>
+              <span>Subir logo</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Información del negocio -->
+      <section class="settings-card">
+        <div class="card-header">
+          <div class="header-icon">
+            <ion-icon name="business-outline" aria-hidden="true"></ion-icon>
+          </div>
+          <div>
+            <h2 class="card-title">Información del negocio</h2>
+            <p class="card-subtitle">Datos que verán tus clientes</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="storefront-outline" aria-hidden="true"></ion-icon>
+              <span>Nombre del negocio</span>
+            </label>
+            <div class="input-wrapper">
+              <ion-input [(ngModel)]="perfil.nombre_negocio" placeholder="Ej: Zapatería El Rey"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">
+                <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+                <span>Subdominio</span>
+              </label>
+              <div class="input-wrapper input-with-suffix">
+                <ion-input [(ngModel)]="perfil.subdominio" placeholder="tu-negocio"></ion-input>
+                <span class="domain-suffix">.tusventas.com</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                <ion-icon name="logo-whatsapp" aria-hidden="true"></ion-icon>
+                <span>WhatsApp</span>
+              </label>
+              <div class="input-wrapper">
+                <ion-input [(ngModel)]="perfil.telefono_whatsapp" placeholder="+57 300 123 4567"></ion-input>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+              <span>Email de contacto</span>
+            </label>
+            <div class="input-wrapper">
+              <ion-input [(ngModel)]="perfil.email" type="email" placeholder="contacto@negocio.com"></ion-input>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hero Principal -->
+      <section class="settings-card settings-card--wide">
+        <div class="card-header">
+          <div class="header-icon">
+            <ion-icon name="images-outline" aria-hidden="true"></ion-icon>
+          </div>
+          <div>
+            <h2 class="card-title">Hero Principal</h2>
+            <p class="card-subtitle">La primera sección que verán tus clientes</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="hero-grid">
+            <div class="hero-text-fields">
+              <div class="form-group">
+                <label class="form-label">
+                  <ion-icon name="text-outline" aria-hidden="true"></ion-icon>
+                  <span>Título</span>
+                </label>
+                <div class="input-wrapper">
+                  <ion-input [(ngModel)]="perfil.hero_1_titulo" placeholder="Bienvenidos a nuestra tienda"></ion-input>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">
+                  <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+                  <span>Subtítulo</span>
+                </label>
+                <div class="input-wrapper">
+                  <ion-input [(ngModel)]="perfil.hero_1_subtitulo" placeholder="Los mejores productos al mejor precio"></ion-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-image-upload">
+              <label class="form-label">
+                <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
+                <span>Imagen de fondo</span>
+              </label>
+              
+              <div class="hero-preview-wrapper">
+                <div class="hero-preview" *ngIf="perfil.hero_1_imagen">
+                  <img [src]="perfil.hero_1_imagen" alt="Hero preview">
+                  <div class="hero-overlay">
+                    <span>{{ perfil.hero_1_titulo || 'Tu título aquí' }}</span>
+                  </div>
+                </div>
+                <div class="hero-placeholder" *ngIf="!perfil.hero_1_imagen">
+                  <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
+                  <span>Vista previa</span>
+                </div>
+              </div>
+
+              <input 
+                type="file" 
+                accept="image/png,image/jpeg,image/jpg,image/webp,image/gif" 
+                (change)="subirHeroImagen($event)" 
+                style="display: none" 
+                #heroInput>
+              
+              <div class="hero-upload-actions">
+                <button type="button" class="btn-upload" (click)="heroInput.click()">
+                  <ion-icon name="cloud-upload-outline" aria-hidden="true"></ion-icon>
+                  <span>{{ perfil.hero_1_imagen ? 'Cambiar imagen' : 'Subir imagen' }}</span>
+                </button>
+                <button 
+                  *ngIf="perfil.hero_1_imagen" 
+                  type="button" 
+                  class="btn-remove-image" 
+                  (click)="eliminarHeroImagen()"
+                  aria-label="Eliminar imagen">
+                  <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+                </button>
+              </div>
+              
+              <p class="form-hint">PNG, JPG, WebP o GIF. Recomendado: 1920x1080px</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Colores -->
+      <section class="settings-card">
+        <div class="card-header">
+          <div class="header-icon">
+            <ion-icon name="color-palette-outline" aria-hidden="true"></ion-icon>
+          </div>
+          <div>
+            <h2 class="card-title">Colores de la marca</h2>
+            <p class="card-subtitle">Define la identidad visual</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="color-grid">
+            <div class="color-item">
+              <label class="color-label">Primario</label>
+              <div class="color-input-wrapper">
+                <input type="color" [(ngModel)]="perfil.color_primario" class="color-input">
+                <span class="color-hex">{{ perfil.color_primario }}</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label class="color-label">Secundario</label>
+              <div class="color-input-wrapper">
+                <input type="color" [(ngModel)]="perfil.color_secundario" class="color-input">
+                <span class="color-hex">{{ perfil.color_secundario }}</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label class="color-label">Fondo</label>
+              <div class="color-input-wrapper">
+                <input type="color" [(ngModel)]="perfil.color_fondo" class="color-input">
+                <span class="color-hex">{{ perfil.color_fondo }}</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label class="color-label">Texto</label>
+              <div class="color-input-wrapper">
+                <input type="color" [(ngModel)]="perfil.color_texto" class="color-input">
+                <span class="color-hex">{{ perfil.color_texto }}</span>
+              </div>
+            </div>
+            <div class="color-item">
+              <label class="color-label">Acento</label>
+              <div class="color-input-wrapper">
+                <input type="color" [(ngModel)]="perfil.color_acento" class="color-input">
+                <span class="color-hex">{{ perfil.color_acento }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="color-preview-bar" [style.background]="'linear-gradient(135deg, ' + perfil.color_primario + ', ' + perfil.color_secundario + ')'">
+            <span>Vista previa del gradiente</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tipografía -->
+      <section class="settings-card">
+        <div class="card-header">
+          <div class="header-icon">
+            <ion-icon name="text-outline" aria-hidden="true"></ion-icon>
+          </div>
+          <div>
+            <h2 class="card-title">Tipografía</h2>
+            <p class="card-subtitle">Tamaños de fuente</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="resize-outline" aria-hidden="true"></ion-icon>
+              <span>Títulos</span>
+            </label>
+            <div class="input-wrapper">
+              <select [(ngModel)]="perfil.fuente_titulo" class="form-select">
+                <option value="2rem">Pequeño (2rem)</option>
+                <option value="2.5rem">Mediano (2.5rem)</option>
+                <option value="3rem">Grande (3rem)</option>
+                <option value="3.5rem">Extra Grande (3.5rem)</option>
+                <option value="4rem">Gigante (4rem)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="resize-outline" aria-hidden="true"></ion-icon>
+              <span>Subtítulos</span>
+            </label>
+            <div class="input-wrapper">
+              <select [(ngModel)]="perfil.fuente_subtitulo" class="form-select">
+                <option value="1rem">Pequeño (1rem)</option>
+                <option value="1.2rem">Mediano (1.2rem)</option>
+                <option value="1.5rem">Grande (1.5rem)</option>
+                <option value="1.8rem">Extra Grande (1.8rem)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="resize-outline" aria-hidden="true"></ion-icon>
+              <span>Texto general</span>
+            </label>
+            <div class="input-wrapper">
+              <select [(ngModel)]="perfil.fuente_texto" class="form-select">
+                <option value="0.9rem">Pequeño (0.9rem)</option>
+                <option value="1rem">Normal (1rem)</option>
+                <option value="1.1rem">Grande (1.1rem)</option>
+                <option value="1.2rem">Extra Grande (1.2rem)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="preview-text">
+            <h3 [style.fontSize]="perfil.fuente_titulo">Título</h3>
+            <p [style.fontSize]="perfil.fuente_subtitulo">Subtítulo</p>
+            <p [style.fontSize]="perfil.fuente_texto">Texto normal de ejemplo</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Botones -->
+      <section class="settings-card">
+        <div class="card-header">
+          <div class="header-icon">
+            <ion-icon name="button-outline" aria-hidden="true"></ion-icon>
+          </div>
+          <div>
+            <h2 class="card-title">Botones</h2>
+            <p class="card-subtitle">Estilo de los botones</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="shapes-outline" aria-hidden="true"></ion-icon>
+              <span>Estilo</span>
+            </label>
+            <div class="input-wrapper">
+              <select [(ngModel)]="perfil.boton_estilo" class="form-select">
+                <option value="gradient">Gradiente</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="radio-button-on-outline" aria-hidden="true"></ion-icon>
+              <span>Bordes</span>
+            </label>
+            <div class="input-wrapper">
+              <select [(ngModel)]="perfil.boton_border_radius" class="form-select">
+                <option value="0px">Sin bordes (0px)</option>
+                <option value="8px">Poco redondeado (8px)</option>
+                <option value="12px">Mediano (12px)</option>
+                <option value="20px">Muy redondeado (20px)</option>
+                <option value="50px">Píldora (50px)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="button-preview">
+            <button class="preview-btn" 
+                    [style.borderRadius]="perfil.boton_border_radius"
+                    [class.gradient]="perfil.boton_estilo === 'gradient'"
+                    [class.solid]="perfil.boton_estilo === 'solid'"
+                    [class.outline]="perfil.boton_estilo === 'outline'"
+                    [class.rounded]="perfil.boton_estilo === 'rounded'">
+              Botón de ejemplo
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Producto Destacado -->
+      <section class="settings-card">
+        <div class="card-header">
+          <div class="header-icon">
+            <ion-icon name="star-outline" aria-hidden="true"></ion-icon>
+          </div>
+          <div>
+            <h2 class="card-title">Producto Destacado</h2>
+            <p class="card-subtitle">Producto para el Hero 2</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="cube-outline" aria-hidden="true"></ion-icon>
+              <span>Seleccionar producto</span>
+            </label>
+            <div class="input-wrapper">
+              <select [(ngModel)]="perfil.producto_destacado_id" (ngModelChange)="cargarProductoSeleccionado()" class="form-select">
+                <option value="">Ninguno</option>
+                <option *ngFor="let producto of productos" [value]="producto.id">
+                  {{ producto.nombre }} - ${{ producto.precio | number:'1.0-0' }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="product-preview" *ngIf="productoSeleccionado">
+            <div class="preview-image">
+              <img *ngIf="productoSeleccionado.imagen_url" [src]="productoSeleccionado.imagen_url" [alt]="productoSeleccionado.nombre">
+              <div *ngIf="!productoSeleccionado.imagen_url" class="placeholder">
+                <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
+              </div>
+            </div>
+            <div class="preview-info">
+              <h4>{{ productoSeleccionado.nombre }}</h4>
+              <p>{{ productoSeleccionado.descripcion || 'Sin descripción' }}</p>
+              <span class="preview-price">${{ productoSeleccionado.precio | number:'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Redes Sociales -->
+      <section class="settings-card settings-card--wide">
+        <div class="card-header">
+          <div class="header-icon">
+            <ion-icon name="share-social-outline" aria-hidden="true"></ion-icon>
+          </div>
+          <div>
+            <h2 class="card-title">Redes Sociales</h2>
+            <p class="card-subtitle">Agrega tus redes al footer</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="social-list" *ngIf="perfil.redes_sociales?.length">
+            <div *ngFor="let red of perfil.redes_sociales; let i = index" class="social-item">
+              <div class="social-inputs">
+                <select [(ngModel)]="red.nombre" class="form-select-small">
+                  <option value="facebook">Facebook</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="twitter">Twitter</option>
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="tiktok">TikTok</option>
+                  <option value="youtube">YouTube</option>
+                  <option value="linkedin">LinkedIn</option>
+                  <option value="otro">Otro</option>
+                </select>
+                <input [(ngModel)]="red.url" placeholder="https://..." class="form-input-full">
+              </div>
+              <button type="button" class="btn-remove-social" (click)="eliminarRedSocial(i)" aria-label="Eliminar red social">
+                <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+              </button>
+            </div>
+          </div>
+
+          <button type="button" class="btn-add-social" (click)="agregarRedSocial()">
+            <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+            <span>Agregar red social</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 🔑 BOTÓN GUARDAR AL FINAL -->
+    <button type="button" class="btn-save-bottom" (click)="guardar()" [disabled]="guardando">
+      <ion-spinner *ngIf="guardando" name="crescent"></ion-spinner>
+      <ion-icon name="checkmark-outline" *ngIf="!guardando"></ion-icon>
+      <span *ngIf="!guardando">Guardar todos los cambios</span>
+    </button>
+
+  </div>
+</ion-content>

@@ -1,0 +1,117 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="main-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tenant/dashboard" class="back-button"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mi Suscripción</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="main-content">
+  <div class="container">
+    
+    <div class="page-header">
+      <div class="header-content">
+        <h1 class="page-title">Plan y Facturación</h1>
+        <p class="page-subtitle">Administra tu suscripción y métodos de pago</p>
+      </div>
+    </div>
+
+    <!-- Status Card -->
+    <div class="status-card" [class.active]="suscripcion?.estado === 'activa'" [class.vencida]="suscripcion?.estado !== 'activa'">
+      <div class="status-header">
+        <div class="status-icon">
+          <ion-icon [name]="suscripcion?.estado === 'activa' ? 'checkmark-circle' : 'alert-circle'"></ion-icon>
+        </div>
+        <div class="status-info">
+          <h2 class="status-title">
+            {{ suscripcion?.estado === 'activa' ? 'Suscripción Activa' : 'Suscripción Vencida' }}
+          </h2>
+          <p class="status-subtitle">
+            {{ suscripcion?.estado === 'activa' ? 'Tu servicio está funcionando correctamente' : 'Tu servicio ha sido suspendido' }}
+          </p>
+        </div>
+      </div>
+      
+      <div class="status-details">
+        <div class="detail-box">
+          <span class="detail-label">Plan</span>
+          <span class="detail-value">{{ suscripcion?.planes?.nombre || 'Básico' }}</span>
+        </div>
+        <div class="detail-box">
+          <span class="detail-label">Vence el</span>
+          <span class="detail-value">{{ suscripcion?.fecha_vencimiento | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="detail-box">
+          <span class="detail-label">Días restantes</span>
+          <span class="detail-value highlight">{{ diasRestantes }}</span>
+        </div>
+      </div>
+
+      <button class="btn-renew" (click)="renovarSuscripcion()" [disabled]="procesando">
+        <ion-spinner *ngIf="procesando" name="crescent"></ion-spinner>
+        <span *ngIf="!procesando">Renovar por $20,000 COP</span>
+      </button>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="info-card">
+      <div class="card-header">
+        <div class="header-icon">
+          <ion-icon name="card-outline"></ion-icon>
+        </div>
+        <h2 class="card-title">Métodos de pago aceptados</h2>
+      </div>
+      <div class="payment-methods">
+        <div class="method-item">
+          <ion-icon name="business-outline"></ion-icon>
+          <span>PSE - Todos los bancos</span>
+        </div>
+        <div class="method-item">
+          <ion-icon name="phone-portrait-outline"></ion-icon>
+          <span>Nequi</span>
+        </div>
+        <div class="method-item">
+          <ion-icon name="phone-portrait-outline"></ion-icon>
+          <span>Daviplata</span>
+        </div>
+        <div class="method-item">
+          <ion-icon name="card-outline"></ion-icon>
+          <span>Tarjeta de crédito/débito</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment History -->
+    <div class="info-card">
+      <div class="card-header">
+        <div class="header-icon">
+          <ion-icon name="receipt-outline"></ion-icon>
+        </div>
+        <h2 class="card-title">Historial de pagos</h2>
+      </div>
+      
+      <div *ngIf="historialPagos.length === 0" class="empty-history">
+        <p>No tienes pagos registrados aún</p>
+      </div>
+
+      <div class="payment-list" *ngIf="historialPagos.length > 0">
+        <div *ngFor="let pago of historialPagos" class="payment-item">
+          <div class="payment-icon" [class]="getEstadoClass(pago.estado)">
+            <ion-icon [name]="pago.estado === 'aprobado' ? 'checkmark' : 
+                              pago.estado === 'rechazado' ? 'close' : 'time'"></ion-icon>
+          </div>
+          <div class="payment-info">
+            <h4 class="payment-amount">${{ pago.monto | number:'1.0-0' }} COP</h4>
+            <p class="payment-desc">{{ pago.descripcion || 'Renovación mensual' }}</p>
+            <span class="payment-date">{{ pago.fecha_pago | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <span class="payment-status" [class]="pago.estado">
+            {{ getEstadoLabel(pago.estado) }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

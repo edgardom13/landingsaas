@@ -1,0 +1,92 @@
+/* ============================================
+   FOOTER GLOBAL - BLANCO HUESO
+   ============================================ */
+
+:host {
+  display: block;
+}
+
+.tenant-footer {
+  background: #f5f3ee;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
+  margin-top: auto;
+  
+  @media (max-width: 768px) {
+    padding: 16px 18px;
+  }
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    
+    @media (max-width: 640px) {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+  
+  .footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      
+      ion-icon {
+        font-size: 1.125rem;
+        color: #6d28d9;
+      }
+    }
+    
+    .footer-copy {
+      font-size: 0.75rem;
+      color: #737373;
+      margin: 0;
+    }
+  }
+  
+  .footer-right {
+    display: flex;
+    gap: 16px;
+    
+    @media (max-width: 640px) {
+      justify-content: center;
+    }
+    
+    .footer-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8125rem;
+      color: #737373;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      
+      ion-icon {
+        font-size: 1rem;
+      }
+      
+      &:hover {
+        color: #6d28d9;
+      }
+      
+      @media (max-width: 480px) {
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+}

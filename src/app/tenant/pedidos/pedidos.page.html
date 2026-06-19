@@ -1,0 +1,310 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="app-toolbar">
+    <div class="toolbar-inner">
+      <button type="button" class="icon-btn back-btn" routerLink="/tenant/dashboard">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <h1>Pedidos</h1>
+      <button type="button" class="btn-export" (click)="exportarCSV()">
+        <ion-icon name="download-outline"></ion-icon>
+        <span>Exportar</span>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-content" fullscreen>
+  <div class="page-container">
+    
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon purple">
+          <ion-icon name="cart-outline"></ion-icon>
+        </div>
+        <div class="stat-data">
+          <span class="stat-num">{{ pedidos.length }}</span>
+          <span class="stat-lbl">Total</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <div class="stat-data">
+          <span class="stat-num">{{ getPedidosPorEstado('pendiente') }}</span>
+          <span class="stat-lbl">Pendientes</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+        </div>
+        <div class="stat-data">
+          <span class="stat-num">{{ getPedidosPorEstado('entregado') }}</span>
+          <span class="stat-lbl">Entregados</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+        <div class="stat-data">
+          <span class="stat-num">${{ getTotalIngresos() | number:'1.0-0' }}</span>
+          <span class="stat-lbl">Ingresos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Búsqueda -->
+    <div class="search-bar">
+      <ion-icon name="search-outline"></ion-icon>
+      <input 
+        type="text" 
+        [(ngModel)]="busqueda" 
+        placeholder="Buscar por cliente, teléfono o ID..."
+        class="search-input">
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="!cargando && pedidosFiltrados.length === 0" class="empty-card">
+      <div class="empty-icon">
+        <ion-icon name="cart-outline"></ion-icon>
+      </div>
+      <h3>Sin pedidos</h3>
+      <p>Aún no hay pedidos que mostrar</p>
+    </div>
+
+    <!-- Lista de Pedidos -->
+    <div *ngIf="!cargando && pedidosFiltrados.length > 0" class="pedidos-list">
+      
+      <div 
+        *ngFor="let pedido of pedidosFiltrados; trackBy: trackById" 
+        class="pedido-card" 
+        [class.expanded]="pedidoExpandido === pedido.id"
+        [class]="pedido.estado">
+        
+        <!-- HEADER (siempre visible) -->
+        <div class="card-header" (click)="toggleExpand(pedido.id)">
+          
+          <div class="header-left">
+            <div class="pedido-id">
+              <ion-icon name="receipt-outline"></ion-icon>
+              <span>#{{ pedido.id.slice(0, 8) }}</span>
+            </div>
+            <div class="pedido-info">
+              <strong>{{ pedido.nombre_cliente }}</strong>
+              <span class="pedido-fecha">{{ pedido.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </div>
+          
+          <div class="header-right">
+            <span class="estado-tag" [class]="pedido.estado">{{ pedido.estado }}</span>
+            <span class="monto-tag">${{ pedido.total | number:'1.0-0' }}</span>
+            <ion-icon 
+              name="chevron-down-outline" 
+              class="expand-icon"
+              [class.rotated]="pedidoExpandido === pedido.id">
+            </ion-icon>
+          </div>
+          
+        </div>
+
+        <!-- CUERPO EXPANDIDO -->
+        <div class="card-body" *ngIf="pedidoExpandido === pedido.id">
+          
+          <!-- Cliente -->
+          <div class="detail-section">
+            <h5 class="detail-title">
+              <ion-icon name="person-outline"></ion-icon>
+              Cliente
+            </h5>
+            <div class="cliente-box">
+              <div class="avatar">{{ getInitials(pedido.nombre_cliente) }}</div>
+              <div class="cliente-info">
+                <strong>{{ pedido.nombre_cliente }}</strong>
+                <div class="info-row">
+                  <ion-icon name="logo-whatsapp"></ion-icon>
+                  <span>{{ pedido.telefono_cliente }}</span>
+                </div>
+                <div class="info-row" *ngIf="pedido.direccion_entrega">
+                  <ion-icon name="location-outline"></ion-icon>
+                  <span>{{ pedido.direccion_entrega }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Productos -->
+          <div class="detail-section">
+            <h5 class="detail-title">
+              <ion-icon name="cube-outline"></ion-icon>
+              Productos
+              <span class="count-tag">{{ pedido.items?.length }}</span>
+            </h5>
+            <div class="productos-box">
+              <div *ngFor="let item of pedido.items" class="prod-row">
+                <span class="qty-tag">{{ item.cantidad }}x</span>
+                <div class="prod-data">
+                  <strong>{{ item.nombre }}</strong>
+                  <small>${{ item.precio | number:'1.0-0' }} c/u</small>
+                </div>
+                <span class="prod-sub">${{ (item.precio * item.cantidad) | number:'1.0-0' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notas -->
+          <div class="detail-section" *ngIf="pedido.notas">
+            <h5 class="detail-title">
+              <ion-icon name="document-text-outline"></ion-icon>
+              Notas
+            </h5>
+            <div class="notas-box">{{ pedido.notas }}</div>
+          </div>
+
+          <!-- Total -->
+          <div class="detail-section">
+            <h5 class="detail-title">
+              <ion-icon name="wallet-outline"></ion-icon>
+              Resumen
+            </h5>
+            <div class="total-box">
+              <div class="total-row">
+                <span>Subtotal</span>
+                <span>${{ pedido.subtotal | number:'1.0-0' }}</span>
+              </div>
+              <div class="total-row" *ngIf="pedido.descuento > 0">
+                <span>Descuento</span>
+                <span class="desc-val">-${{ pedido.descuento | number:'1.0-0' }}</span>
+              </div>
+              <div class="total-row final">
+                <span>Total</span>
+                <span class="total-val">${{ pedido.total | number:'1.0-0' }} COP</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cambiar Estado -->
+          <div class="detail-section">
+            <h5 class="detail-title">
+              <ion-icon name="swap-horizontal-outline"></ion-icon>
+              Cambiar Estado
+            </h5>
+            <div class="estados-row">
+              <button 
+                *ngFor="let estado of estadosDisponibles"
+                class="estado-chip"
+                [class.active]="pedido.estado === estado.value"
+                [class]="estado.value"
+                (click)="cambiarEstadoDesdeModal(pedido, estado.value)">
+                <ion-icon [name]="estado.icon"></ion-icon>
+                <span>{{ estado.label }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="actions-row">
+            <button class="action-btn whatsapp" (click)="contactarCliente(pedido)">
+              <ion-icon name="logo-whatsapp"></ion-icon>
+              <span>WhatsApp</span>
+            </button>
+            <button class="action-btn edit" (click)="abrirModalEditar(pedido)">
+              <ion-icon name="create-outline"></ion-icon>
+              <span>Editar</span>
+            </button>
+            <button class="action-btn delete" (click)="eliminarPedido(pedido.id)">
+              <ion-icon name="trash-outline"></ion-icon>
+              <span>Eliminar</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+                  <app-tenant-footer></app-tenant-footer>
+    </div>
+
+
+    <!-- Loading -->
+    <div *ngIf="cargando" class="loading-card">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando pedidos...</p>
+    </div>
+
+  </div>
+
+
+</ion-content>
+
+<!-- ============================================
+     SOLO MODAL DE EDICIÓN (simple)
+     ============================================ -->
+<ion-modal 
+  [isOpen]="modalEditarAbierto" 
+  (didDismiss)="cerrarModalEditar()"
+  class="modal-editar-simple">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Editar Pedido</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarModalEditar()">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    
+    <ion-content *ngIf="pedidoEditando">
+      <div class="edit-form">
+        
+        <div class="field">
+          <label>Nombre del Cliente</label>
+          <input 
+            type="text" 
+            [(ngModel)]="pedidoEditando.nombre_cliente" 
+            placeholder="Nombre completo">
+        </div>
+
+        <div class="field">
+          <label>Teléfono</label>
+          <input 
+            type="tel" 
+            [(ngModel)]="pedidoEditando.telefono_cliente" 
+            placeholder="+57 300 123 4567">
+        </div>
+
+        <div class="field">
+          <label>Dirección de Entrega</label>
+          <input 
+            type="text" 
+            [(ngModel)]="pedidoEditando.direccion_entrega" 
+            placeholder="Dirección completa">
+        </div>
+
+        <div class="field">
+          <label>Notas</label>
+          <textarea 
+            [(ngModel)]="pedidoEditando.notas" 
+            rows="3"
+            placeholder="Notas adicionales..."></textarea>
+        </div>
+
+        <div class="form-buttons">
+          <button class="btn-cancel" (click)="cerrarModalEditar()">Cancelar</button>
+          <button 
+            class="btn-save" 
+            (click)="guardarEdicion()"
+            [disabled]="!pedidoEditando.nombre_cliente || !pedidoEditando.telefono_cliente">
+            <ion-icon name="save-outline"></ion-icon>
+            <span>Guardar</span>
+          </button>
+        </div>
+
+      </div>
+
+    </ion-content>
+  </ng-template>
+</ion-modal>

@@ -1,0 +1,135 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="main-toolbar">
+    <div class="toolbar-content">
+      <div class="logo-section">
+        <ion-icon name="shield-checkmark-outline" class="logo-icon"></ion-icon>
+        <span class="brand-name">Admin Panel</span>
+      </div>
+      <div class="user-section">
+        <div class="user-info">
+          <span class="user-name">Super Admin</span>
+          <span class="user-role">Administrador</span>
+        </div>
+        <button class="btn-logout" (click)="logout()">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="main-content">
+  <div class="container">
+    
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <div class="welcome-text">
+        <h1 class="welcome-title">Panel de Control</h1>
+        <p class="welcome-subtitle">Resumen general de la plataforma</p>
+      </div>
+      <div class="date-badge">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>{{ today | date:'EEEE, d MMMM yyyy' }}</span>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card primary">
+        <div class="stat-icon-wrapper">
+          <ion-icon name="people-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-number">{{ estadisticas.totalClientes }}</h2>
+          <p class="stat-label">Total Clientes</p>
+        </div>
+      </div>
+
+      <div class="stat-card success">
+        <div class="stat-icon-wrapper">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-number">{{ estadisticas.clientesActivos }}</h2>
+          <p class="stat-label">Clientes Activos</p>
+        </div>
+      </div>
+
+      <div class="stat-card danger">
+        <div class="stat-icon-wrapper">
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-number">{{ estadisticas.clientesVencidos }}</h2>
+          <p class="stat-label">Clientes Vencidos</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue Cards -->
+    <div class="revenue-grid">
+      <div class="revenue-card monthly">
+        <div class="revenue-header">
+          <ion-icon name="cash-outline"></ion-icon>
+          <span class="revenue-label">Ingresos del mes</span>
+        </div>
+        <div class="revenue-amount">
+          <span class="currency">$</span>
+          <span class="amount">{{ estadisticas.ingresosMes | number:'1.0-0' }}</span>
+        </div>
+        <span class="revenue-sub">COP</span>
+      </div>
+
+      <div class="revenue-card total">
+        <div class="revenue-header">
+          <ion-icon name="trending-up-outline"></ion-icon>
+          <span class="revenue-label">Ingresos totales</span>
+        </div>
+        <div class="revenue-amount">
+          <span class="currency">$</span>
+          <span class="amount">{{ estadisticas.ingresosTotales | number:'1.0-0' }}</span>
+        </div>
+        <span class="revenue-sub">COP histórico</span>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section">
+      <h2 class="section-title">Acciones rápidas</h2>
+      <div class="actions-grid">
+        <div class="action-card" routerLink="/admin/clientes">
+          <div class="action-icon">
+            <ion-icon name="people-outline"></ion-icon>
+          </div>
+          <h3>Gestionar Clientes</h3>
+          <p>Administra usuarios y suscripciones</p>
+        </div>
+
+        <div class="action-card">
+          <div class="action-icon">
+            <ion-icon name="cash-outline"></ion-icon>
+          </div>
+          <h3>Ver Pagos</h3>
+          <p>Historial de transacciones</p>
+        </div>
+
+        <div class="action-card">
+          <div class="action-icon">
+            <ion-icon name="bar-chart-outline"></ion-icon>
+          </div>
+          <h3>Estadísticas</h3>
+          <p>Análisis detallado de la plataforma</p>
+        </div>
+
+        <div class="action-card">
+          <div class="action-icon">
+            <ion-icon name="settings-outline"></ion-icon>
+          </div>
+          <h3>Configuración</h3>
+          <p>Ajustes del sistema</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

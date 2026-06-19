@@ -1,0 +1,160 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="app-toolbar">
+    <div class="toolbar-inner">
+      <a routerLink="/tenant" class="brand" aria-label="LandingSaaS">
+        <ion-icon name="business-outline" aria-hidden="true"></ion-icon>
+        <h1 style="color: azure !important;">LandingSaaS</h1>
+      </a>
+
+      <button
+        type="button"
+        class="icon-btn"
+        (click)="logout()"
+        aria-label="Cerrar sesión">
+        <ion-icon name="log-out-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="dashboard-content" scrollY="true" forceOverscroll="false">
+  <div class="content-container">
+    
+    <!-- Saludo -->
+    <header class="greeting">
+      <h1 class="greeting-title">Hola, {{ usuario?.nombre_negocio }}</h1>
+      <time class="greeting-date" [attr.datetime]="today">
+        {{ today | date:'EEEE, d MMMM yyyy' }}
+      </time>
+    </header>
+
+    <!-- CTA principal -->
+    <section class="primary-cta">
+      <button
+        type="button"
+        class="btn-primary"
+        (click)="verMiNegocio()"
+        aria-label="Ver mi negocio">
+        <ion-icon name="eye-outline" aria-hidden="true"></ion-icon>
+        <span>Ver mi Negocio</span>
+        <ion-icon name="open-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </section>
+
+    <!-- Alerta de suscripción -->
+    <div
+      *ngIf="estadisticas.diasRestantes <= 7"
+      class="alert-banner"
+      role="alert"
+      aria-live="polite">
+      <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
+      <div class="alert-body">
+        <strong>Vence en {{ estadisticas.diasRestantes }} días</strong>
+        <span>Renueva tu suscripción para no perder acceso.</span>
+      </div>
+      <a routerLink="/tenant/pagos" class="alert-cta">Renovar</a>
+    </div>
+
+    <!-- Métricas -->
+    <section class="metrics" aria-label="Métricas del negocio">
+      <article class="metric">
+        <div class="metric-icon metric-icon--neutral">
+          <ion-icon name="cube-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <div class="metric-data">
+          <span class="metric-value">{{ estadisticas.productos }}</span>
+          <span class="metric-label">Productos</span>
+        </div>
+      </article>
+
+      <article class="metric">
+        <div class="metric-icon metric-icon--success">
+          <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <div class="metric-data">
+          <span class="metric-value">{{ estadisticas.leads }}</span>
+          <span class="metric-label">Leads</span>
+        </div>
+      </article>
+
+      <article class="metric">
+        <div class="metric-icon metric-icon--danger">
+          <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <div class="metric-data">
+          <span class="metric-value">{{ estadisticas.diasRestantes }}</span>
+          <span class="metric-label">Días restantes</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- Acciones rápidas -->
+    <section class="section" aria-labelledby="quick-actions-title">
+      <h2 id="quick-actions-title" class="section-title">Acciones rápidas</h2>
+
+      <nav class="quick-actions" aria-label="Accesos directos">
+        <a routerLink="/tenant/productos" class="action">
+          <span class="action-icon">
+            <ion-icon name="cube-outline" aria-hidden="true"></ion-icon>
+          </span>
+          <span class="action-label">Productos</span>
+        </a>
+
+        <a routerLink="/tenant/personalizar" class="action">
+          <span class="action-icon">
+            <ion-icon name="color-palette-outline" aria-hidden="true"></ion-icon>
+          </span>
+          <span class="action-label">Diseñar</span>
+        </a>
+
+        <a routerLink="/tenant/pedidos" class="action">
+          <span class="action-icon">
+            <ion-icon name="cart-outline" aria-hidden="true"></ion-icon>
+          </span>
+          <span class="action-label">Pedidos</span>
+        </a>
+
+        <a routerLink="/tenant/leads" class="action">
+          <span class="action-icon">
+            <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
+          </span>
+          <span class="action-label">Leads</span>
+        </a>
+      </nav>
+    </section>
+
+    <!-- Suscripción -->
+    <section
+      *ngIf="suscripcion"
+      class="subscription"
+      aria-label="Información de suscripción">
+      <header class="subscription-header">
+        <span class="subscription-label">Plan actual</span>
+        <span
+          class="badge"
+          [class.badge--active]="suscripcion.estado === 'activa'"
+          [class.badge--inactive]="suscripcion.estado !== 'activa'">
+          {{ suscripcion.estado }}
+        </span>
+      </header>
+
+      <div class="subscription-body">
+        <strong>{{ suscripcion.planes?.nombre || 'Básico' }}</strong>
+        <span class="subscription-price">
+          ${{ suscripcion.monto_pago | number:'1.0-0' }}<small>/mes</small>
+        </span>
+      </div>
+
+      <footer class="subscription-footer">
+        <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+        <time [attr.datetime]="suscripcion.fecha_vencimiento">
+          Vence {{ suscripcion.fecha_vencimiento | date:'dd/MM/yyyy' }}
+        </time>
+      </footer>
+    </section>
+    <!-- Footer -->    <app-tenant-footer></app-tenant-footer>
+    <!-- Espacio extra para probar scroll -->
+    <div style="height: 100px;"></div>
+  </div>
+
+</ion-content>

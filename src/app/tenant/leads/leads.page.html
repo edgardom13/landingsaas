@@ -1,0 +1,280 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="app-toolbar">
+    <div class="toolbar-inner">
+      <button type="button" class="icon-btn back-btn" routerLink="/tenant/dashboard">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <span>Leads Capturados</span>
+      <button type="button" class="btn-export-header" (click)="exportarCSV()">
+        <ion-icon name="download-outline"></ion-icon>
+        <span>Exportar</span>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="dashboard-content" fullscreen>
+  <div class="content-container">
+    
+    <!-- Page Header -->
+    <header class="page-header">
+      <h1 class="page-title">Leads Capturados</h1>
+      <p class="page-subtitle">Gestiona tus clientes potenciales</p>
+    </header>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon-wrapper primary">
+          <ion-icon name="people-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-number">{{ leads.length }}</h2>
+          <p class="stat-label">Total Leads</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrapper success">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-number">{{ getLeadsPorEstado('vendido') }}</h2>
+          <p class="stat-label">Vendidos</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrapper warning">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-number">{{ getLeadsPorEstado('contactado') }}</h2>
+          <p class="stat-label">Contactados</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrapper info">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-number">${{ getTotalVentas() | number:'1.0-0' }}</h2>
+          <p class="stat-label">Ingresos Totales</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-section">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input 
+          type="text" 
+          [(ngModel)]="busqueda" 
+          placeholder="Buscar por nombre, teléfono o email..."
+          class="search-input">
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!cargando && leads.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <ion-icon name="people-outline"></ion-icon>
+      </div>
+      <h2 class="empty-title">Aún no tienes leads</h2>
+      <p class="empty-text">Cuando los visitantes llenen el formulario de tu landing, aparecerán aquí</p>
+      <button class="btn-primary" routerLink="/tenant/personalizar">
+        <ion-icon name="color-palette-outline"></ion-icon>
+        <span>Configurar mi landing</span>
+      </button>
+    </div>
+
+    <!-- Leads List -->
+    <div *ngIf="!cargando && leadsFiltrados.length > 0" class="leads-container">
+      
+      <div *ngFor="let lead of leadsFiltrados" class="lead-card" [class.vendido]="lead.estado === 'vendido'">
+        
+        <!-- Lead Header -->
+        <div class="lead-header">
+          <div class="lead-avatar">
+            <span>{{ getInitials(lead.nombre) }}</span>
+          </div>
+          <div class="lead-info">
+            <h3 class="lead-name">{{ lead.nombre }}</h3>
+            <div class="lead-meta">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>{{ lead.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </div>
+          <div class="lead-status">
+            <span class="status-badge" [class]="lead.estado">
+              {{ lead.estado | uppercase }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Lead Details -->
+        <div class="lead-details">
+          <div class="detail-item">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+            <span>{{ lead.telefono }}</span>
+          </div>
+          <div class="detail-item" *ngIf="lead.email">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span>{{ lead.email }}</span>
+          </div>
+          <div class="detail-item" *ngIf="lead.mensaje">
+            <ion-icon name="chatbubble-outline"></ion-icon>
+            <span class="mensaje-text">{{ lead.mensaje }}</span>
+          </div>
+          
+          <!-- Venta Info -->
+          <div class="venta-info" *ngIf="lead.estado === 'vendido' && lead.monto_venta">
+            <ion-icon name="cash-outline" class="icon-success"></ion-icon>
+            <div class="venta-details">
+              <strong>${{ lead.monto_venta | number:'1.0-0' }} COP</strong>
+              <span *ngIf="lead.metodo_pago">{{ lead.metodo_pago }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lead Actions -->
+        <div class="lead-actions">
+          <button class="btn-action btn-whatsapp" (click)="abrirWhatsApp(lead)">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+            <span>Contactar</span>
+          </button>
+          
+          <div class="btn-group">
+            <button 
+              class="btn-action-small" 
+              (click)="cambiarEstado(lead, 'contactado')" 
+              [class.active]="lead.estado === 'contactado'"
+              title="Marcar como contactado">
+              <ion-icon name="time-outline"></ion-icon>
+            </button>
+            
+            <button 
+              class="btn-action-small btn-success" 
+              (click)="abrirModalVenta(lead)" 
+              [class.active]="lead.estado === 'vendido'"
+              title="Registrar venta">
+              <ion-icon name="cash-outline"></ion-icon>
+            </button>
+            
+            <button 
+              class="btn-action-small btn-danger" 
+              (click)="eliminarLead(lead.id)"
+              title="Eliminar">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="cargando" class="loading-state">
+      <ion-spinner name="crescent" class="spinner-large"></ion-spinner>
+      <p>Cargando leads...</p>
+    </div>
+
+  </div>
+</ion-content>
+
+<!-- ============================================
+     MODAL DE VENTA
+     ============================================ -->
+<ion-modal [isOpen]="modalVentaAbierto" (didDismiss)="cerrarModalVenta()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Registrar Venta</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarModalVenta()">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    
+    <ion-content class="modal-content">
+      <div class="modal-body" *ngIf="leadSeleccionado">
+        
+        <div class="modal-lead-info">
+          <div class="lead-avatar small">
+            <span>{{ getInitials(leadSeleccionado.nombre) }}</span>
+          </div>
+          <div>
+            <h3>{{ leadSeleccionado.nombre }}</h3>
+            <p>{{ leadSeleccionado.telefono }}</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <ion-icon name="cash-outline"></ion-icon>
+            <span>Monto de la venta *</span>
+          </label>
+          <div class="input-wrapper">
+            <input 
+              type="number" 
+              [(ngModel)]="ventaData.monto" 
+              placeholder="0"
+              class="form-input"
+              min="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <ion-icon name="card-outline"></ion-icon>
+            <span>Método de pago</span>
+          </label>
+          <div class="input-wrapper">
+            <select [(ngModel)]="ventaData.metodo_pago" class="form-select">
+              <option value="">Seleccionar...</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Nequi">Nequi</option>
+              <option value="Daviplata">Daviplata</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <span>Notas (opcional)</span>
+          </label>
+          <div class="input-wrapper">
+            <textarea 
+              [(ngModel)]="ventaData.notas" 
+              placeholder="Detalles adicionales..."
+              class="form-textarea"
+              rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="cerrarModalVenta()">
+            Cancelar
+          </button>
+          <button 
+            class="btn-confirm" 
+            (click)="confirmarVenta()"
+            [disabled]="!ventaData.monto || ventaData.monto <= 0">
+            <ion-icon name="checkmark-outline"></ion-icon>
+            <span>Registrar Venta</span>
+          </button>
+        </div>
+
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

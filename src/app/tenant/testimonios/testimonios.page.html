@@ -1,0 +1,75 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="main-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tenant/dashboard" class="back-button"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Testimonios</ion-title>
+    <ion-buttons slot="end">
+      <button class="btn-add" (click)="crearTestimonio()">
+        <ion-icon name="add-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="main-content">
+  <div class="container">
+    
+    <div class="page-header">
+      <div class="header-content">
+        <h1 class="page-title">Testimonios de clientes</h1>
+        <p class="page-subtitle">Muestra la opinión de tus clientes para generar confianza</p>
+      </div>
+      <div class="stats-badge">
+        <ion-icon name="star-outline"></ion-icon>
+        <span>{{ testimonios.length }} testimonios</span>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!cargando && testimonios.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+      </div>
+      <h2 class="empty-title">No tienes testimonios</h2>
+      <p class="empty-text">Agrega testimonios de tus clientes para aumentar la credibilidad de tu negocio</p>
+      <button class="btn-primary" (click)="crearTestimonio()">
+        <ion-icon name="add-outline" slot="start"></ion-icon>
+        Agregar testimonio
+      </button>
+    </div>
+
+    <!-- Testimonials Grid -->
+    <div *ngIf="!cargando && testimonios.length > 0" class="testimonials-grid">
+      <div *ngFor="let t of testimonios" class="testimonial-card">
+        <div class="quote-icon">
+          <ion-icon name="chatbubble-ellipses"></ion-icon>
+        </div>
+        <p class="testimonial-text">"{{ t.comentario }}"</p>
+        <div class="stars">
+          <ion-icon *ngFor="let i of [1,2,3,4,5]" 
+                    [name]="i <= t.calificacion ? 'star' : 'star-outline'">
+          </ion-icon>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">
+            <span>{{ t.nombre_cliente?.charAt(0) }}</span>
+          </div>
+          <div class="author-info">
+            <h4 class="author-name">{{ t.nombre_cliente }}</h4>
+            <span class="author-label">Cliente verificado</span>
+          </div>
+        </div>
+        <button class="btn-delete-icon" (click)="eliminarTestimonio(t.id)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="loading-state">
+      <ion-spinner name="crescent" class="spinner-large"></ion-spinner>
+      <p>Cargando testimonios...</p>
+    </div>
+
+  </div>
+</ion-content>

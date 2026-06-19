@@ -1,0 +1,145 @@
+<ion-content class="register-content">
+  <div class="register-container">
+    
+    <!-- Header -->
+    <div class="brand-section">
+      <div class="logo-wrapper">
+        <ion-icon name="rocket-outline" class="logo-icon"></ion-icon>
+      </div>
+      <h1 class="brand-title">Crea tu cuenta</h1>
+      <p class="brand-subtitle">Comienza tu prueba gratuita de 30 días</p>
+    </div>
+
+    <!-- Form -->
+    <div class="form-section">
+      <form (ngSubmit)="registrar()">
+        
+        <!-- Account Info -->
+        <div class="form-group-title">
+          <ion-icon name="person-outline"></ion-icon>
+          <span>Información de cuenta</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="mail-outline"></ion-icon>
+              <span>Correo electrónico</span>
+            </label>
+            <div class="input-wrapper">
+              <ion-input 
+                type="email" 
+                [(ngModel)]="datos.email" 
+                name="email"
+                placeholder="tu@email.com"
+                autocomplete="email">
+              </ion-input>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="lock-closed-outline"></ion-icon>
+              <span>Contraseña</span>
+            </label>
+            <div class="input-wrapper">
+              <ion-input 
+                type="password" 
+                [(ngModel)]="datos.password" 
+                name="password"
+                placeholder="Mínimo 8 caracteres"
+                autocomplete="new-password">
+              </ion-input>
+            </div>
+          </div>
+        </div>
+
+        <!-- Business Info -->
+        <div class="form-group-title">
+          <ion-icon name="business-outline"></ion-icon>
+          <span>Información del negocio</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <ion-icon name="storefront-outline"></ion-icon>
+            <span>Nombre del negocio</span>
+          </label>
+          <div class="input-wrapper">
+            <ion-input 
+              type="text" 
+              [(ngModel)]="datos.nombre_negocio" 
+              name="nombre_negocio"
+              placeholder="Ej: Zapatería El Rey">
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="globe-outline"></ion-icon>
+              <span>Subdominio</span>
+            </label>
+            <div class="input-wrapper input-with-suffix">
+              <ion-input 
+                type="text" 
+                [(ngModel)]="datos.subdominio" 
+                name="subdominio"
+                placeholder="tu-negocio">
+              </ion-input>
+              <span class="domain-suffix">.tusventas.com</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <ion-icon name="logo-whatsapp"></ion-icon>
+              <span>WhatsApp</span>
+            </label>
+            <div class="input-wrapper">
+              <ion-input 
+                type="tel" 
+                [(ngModel)]="datos.telefono_whatsapp" 
+                name="telefono_whatsapp"
+                placeholder="+57 300 123 4567">
+              </ion-input>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan Info -->
+        <div class="plan-card">
+          <div class="plan-content">
+            <div class="plan-header">
+              <div class="plan-badge">
+                <ion-icon name="flame-outline"></ion-icon>
+                <span>Plan Básico</span>
+              </div>
+              <div class="plan-price">$20,000 COP/mes</div>
+            </div>
+            <ul class="plan-features">
+              <li><ion-icon name="checkmark-circle"></ion-icon> Productos ilimitados</li>
+              <li><ion-icon name="checkmark-circle"></ion-icon> Captación de leads</li>
+              <li><ion-icon name="checkmark-circle"></ion-icon> 3 plantillas disponibles</li>
+              <li><ion-icon name="checkmark-circle"></ion-icon> Soporte por email</li>
+            </ul>
+          </div>
+        </div>
+
+        <button 
+          type="submit"
+          class="btn-register"
+          [disabled]="cargando">
+          <ion-spinner *ngIf="cargando" name="crescent" class="button-spinner"></ion-spinner>
+          <span *ngIf="!cargando">Crear mi cuenta gratis</span>
+          <ion-icon name="arrow-forward-outline" *ngIf="!cargando"></ion-icon>
+        </button>
+
+        <div class="login-link">
+          <p>¿Ya tienes una cuenta? <a routerLink="/tenant/login">Inicia sesión</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>

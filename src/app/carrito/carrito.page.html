@@ -1,0 +1,171 @@
+<ion-content class="cart-content">
+  
+  <!-- Header -->
+  <header class="cart-header">
+    <div class="container">
+      <button class="btn-back" (click)="volver()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        <span>Seguir comprando</span>
+      </button>
+      <h1 class="page-title">Mi Carrito</h1>
+      <div class="header-spacer"></div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- Carrito Vacío -->
+    <div *ngIf="items.length === 0" class="empty-cart">
+      <div class="empty-icon">
+        <ion-icon name="cart-outline"></ion-icon>
+      </div>
+      <h2>Tu carrito está vacío</h2>
+      <p>Agrega productos para continuar con tu compra</p>
+      <button class="btn-primary" (click)="volver()">
+        <ion-icon name="cube-outline"></ion-icon>
+        <span>Ver Productos</span>
+      </button>
+    </div>
+
+    <!-- Carrito con Productos -->
+    <div *ngIf="items.length > 0" class="cart-layout">
+      
+      <!-- Lista de Productos -->
+      <div class="cart-items">
+        <div class="section-header">
+          <h2>Productos ({{ items.length }})</h2>
+          <button class="btn-clear" (click)="limpiarCarrito()">
+            <ion-icon name="trash-outline"></ion-icon>
+            <span>Limpiar todo</span>
+          </button>
+        </div>
+
+        <div *ngFor="let item of items" class="cart-item">
+          <div class="item-image">
+            <img *ngIf="item.imagen" [src]="item.imagen" [alt]="item.nombre">
+            <div *ngIf="!item.imagen" class="image-placeholder">
+              <ion-icon name="image-outline"></ion-icon>
+            </div>
+          </div>
+
+          <div class="item-details">
+            <h3 class="item-name">{{ item.nombre }}</h3>
+            <p class="item-description">{{ item.descripcion }}</p>
+            <div class="item-price">${{ item.precio | number:'1.0-0' }} COP</div>
+          </div>
+
+          <div class="item-controls">
+            <div class="quantity-control">
+              <button class="btn-quantity" (click)="cambiarCantidad(item.id, item.cantidad - 1)">
+                <ion-icon name="remove-outline"></ion-icon>
+              </button>
+              <span class="quantity">{{ item.cantidad }}</span>
+              <button class="btn-quantity" (click)="cambiarCantidad(item.id, item.cantidad + 1)">
+                <ion-icon name="add-outline"></ion-icon>
+              </button>
+            </div>
+            <div class="item-total">
+              <span class="total-label">Total:</span>
+              <span class="total-price">${{ item.precio * item.cantidad | number:'1.0-0' }}</span>
+            </div>
+            <button class="btn-remove" (click)="eliminarItem(item.id)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen y Checkout -->
+      <div class="cart-summary">
+        <div class="summary-card">
+          <h3 class="summary-title">Resumen del Pedido</h3>
+          
+          <div class="summary-details">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>${{ getTotal() | number:'1.0-0' }} COP</span>
+            </div>
+            <div class="summary-row">
+              <span>Envío</span>
+              <span class="shipping-free">Gratis</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span>${{ getTotal() | number:'1.0-0' }} COP</span>
+            </div>
+          </div>
+
+          <!-- Formulario de Datos -->
+          <div class="checkout-form">
+            <h4 class="form-title">Tus Datos</h4>
+            
+            <div class="form-group">
+              <label>
+                <ion-icon name="person-outline"></ion-icon>
+                <span>Nombre completo</span>
+              </label>
+              <input 
+                type="text" 
+                [(ngModel)]="datosCliente.nombre" 
+                placeholder="Tu nombre"
+                class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label>
+                <ion-icon name="call-outline"></ion-icon>
+                <span>Teléfono</span>
+              </label>
+              <input 
+                type="tel" 
+                [(ngModel)]="datosCliente.telefono" 
+                placeholder="Tu teléfono"
+                class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label>
+                <ion-icon name="location-outline"></ion-icon>
+                <span>Dirección de entrega</span>
+              </label>
+              <input 
+                type="text" 
+                [(ngModel)]="datosCliente.direccion" 
+                placeholder="Dirección completa"
+                class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label>
+                <ion-icon name="document-text-outline"></ion-icon>
+                <span>Notas adicionales (opcional)</span>
+              </label>
+              <textarea 
+                [(ngModel)]="datosCliente.notas" 
+                placeholder="Instrucciones especiales..."
+                rows="3"
+                class="form-input textarea">
+              </textarea>
+            </div>
+          </div>
+
+          <button 
+            class="btn-checkout" 
+            (click)="enviarPedido()"
+            [disabled]="!datosCliente.nombre || !datosCliente.telefono">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+            <span>Enviar Pedido por WhatsApp</span>
+          </button>
+
+          <p class="checkout-info">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            Tu pedido será enviado directamente al vendedor
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</ion-content>

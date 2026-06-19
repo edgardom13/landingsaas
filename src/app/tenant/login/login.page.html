@@ -1,0 +1,86 @@
+<ion-content class="login-content">
+  <div class="login-container">
+    
+    <!-- Logo Section -->
+    <div class="brand-section">
+      <div class="logo-wrapper">
+        <ion-icon name="business-outline" class="logo-icon"></ion-icon>
+      </div>
+      <h1 class="brand-title">LandingSaaS</h1>
+      <p class="brand-subtitle">Inicia sesión en tu panel de control</p>
+    </div>
+
+    <!-- Login Form -->
+    <div class="form-section">
+      <form (ngSubmit)="login()">
+        <div class="form-group">
+          <label class="form-label">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span>Correo electrónico</span>
+          </label>
+          <div class="input-wrapper">
+            <ion-input 
+              type="email" 
+              [(ngModel)]="email" 
+              name="email"
+              placeholder="tu@email.com"
+              autocomplete="email">
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            <span>Contraseña</span>
+          </label>
+          <div class="input-wrapper">
+            <ion-input 
+              type="password" 
+              [(ngModel)]="password" 
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password">
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox">
+            <span>Recordarme</span>
+          </label>
+          <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button 
+          type="submit"
+          class="btn-login"
+          [disabled]="cargando || !email || !password">
+          <ion-spinner *ngIf="cargando" name="crescent" class="button-spinner"></ion-spinner>
+          <span *ngIf="!cargando">Iniciar Sesión</span>
+          <ion-icon name="arrow-forward-outline" *ngIf="!cargando"></ion-icon>
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>o</span>
+      </div>
+
+      <div class="register-section">
+        <p>¿No tienes una cuenta?</p>
+        <button 
+          type="button"
+          class="btn-register"
+          routerLink="/tenant/registro">
+          Crear cuenta gratuita
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      <p>© 2026 LandingSaaS. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</ion-content>

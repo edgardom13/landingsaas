@@ -1,2 +1,54 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+:root {
+  // Fondo negro global
+  --ion-background-color: #0a0a0a;
+  --ion-background-color-rgb: 10, 10, 10;
+  
+  // Texto blanco
+  --ion-text-color: #ffffff;
+  --ion-text-color-rgb: 255, 255, 255;
+  
+  // Toolbars
+  --ion-toolbar-background: #1a1a1a;
+  --ion-toolbar-color: #ffffff;
+  
+  // Cards (blancas para mantener contraste)
+  --ion-card-background: #ffffff;
+  --ion-card-color: #1a1a1a;
+  
+  // Items
+  --ion-item-background: #1a1a1a;
+  --ion-item-color: #ffffff;
+  
+  // Modal
+  --ion-modal-background: #0a0a0a;
+  
+  // Popover
+  --ion-popover-background: #1a1a1a;
+  
+  // Alert
+  --ion-alert-background: #1a1a1a;
+  
+  // Action Sheet
+  --ion-action-sheet-background: #1a1a1a;
+  
+  // Toast
+  --ion-toast-background: #1a1a1a;
+  
+  // Border
+  --ion-border-color: rgba(139, 92, 246, 0.2);
+  
+  // Color primario (morado)
+  --ion-color-primary: #6b21a8;
+  --ion-color-primary-rgb: 107, 33, 168;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #5b1988;
+  --ion-color-primary-tint: #7a38b5;
+}
+
+.ios, .md {
+  --ion-background-color: #0a0a0a;
+  --ion-text-color: #ffffff;
+  --ion-toolbar-background: #1a1a1a;
+  --ion-item-background: #1a1a1a;
+}

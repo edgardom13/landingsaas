@@ -1,0 +1,436 @@
+/* ============================================
+   DESIGN TOKENS
+   ============================================ */
+:host {
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 999px;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --duration: 250ms;
+}
+
+:root,
+:host {
+  --bg: #faf9f7;
+  --surface: #ffffff;
+  --border: rgba(0, 0, 0, 0.06);
+  --border-hover: rgba(0, 0, 0, 0.1);
+  --text: #0a0a0a;
+  --text-muted: #6b7280;
+  --metallic-purple: #6d28d9;
+  --gradient-metallic: linear-gradient(135deg, #0a0a0a 0%, #3c1a8f 50%, #6d28d9 100%);
+  --gradient-metallic-hover: linear-gradient(135deg, #1a1a1a 0%, #4c1a9f 50%, #7c3aed 100%);
+  --gradient-shine: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.15) 45%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.15) 55%, transparent 60%);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-metallic: 0 6px 24px rgba(109, 40, 217, 0.18);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+}
+
+/* ============================================
+   BASE
+   ============================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:host {
+  display: block;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.02em;
+}
+
+ion-content.login-content {
+  --background: var(--bg);
+  --color: var(--text);
+}
+
+.login-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  padding-bottom: calc(var(--space-10) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  min-height: 100vh;
+  justify-content: center;
+}
+
+/* ============================================
+   BRAND SECTION
+   ============================================ */
+.brand-section {
+  text-align: center;
+  animation: fadeInUp 0.6s var(--ease-out);
+  
+  .logo-wrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-4);
+    border-radius: var(--radius-lg);
+    background: var(--gradient-metallic);
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-metallic);
+    
+    .logo-icon {
+      font-size: 2.5rem;
+      color: white;
+    }
+  }
+  
+  .brand-title {
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    margin: 0 0 var(--space-2);
+    background: var(--gradient-metallic);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.03em;
+  }
+  
+  .brand-subtitle {
+    font-size: var(--text-base);
+    color: var(--text-muted);
+    margin: 0;
+  }
+}
+
+/* ============================================
+   FORM SECTION
+   ============================================ */
+.form-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+  animation: fadeInUp 0.6s var(--ease-out) 0.1s backwards;
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  
+  .form-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text);
+    
+    ion-icon {
+      font-size: 1rem;
+      color: var(--metallic-purple);
+    }
+  }
+  
+  .input-wrapper {
+    position: relative;
+    
+    ion-input {
+      --background: var(--bg) !important;
+      --color: var(--text) !important;
+      --placeholder-color: var(--text-muted) !important;
+      --padding-start: 16px !important;
+      --padding-end: 16px !important;
+      --padding-top: 12px !important;
+      --padding-bottom: 12px !important;
+      
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--text-base);
+      font-family: inherit;
+      transition: all var(--duration) var(--ease-out);
+      
+      &:focus,
+      &:focus-within {
+        --background: var(--surface) !important;
+        border-color: var(--metallic-purple) !important;
+        box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1) !important;
+      }
+      
+      &::placeholder {
+        color: var(--text-muted);
+        opacity: 1;
+      }
+    }
+  }
+}
+
+/* ============================================
+   FORM OPTIONS
+   ============================================ */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  
+  .remember-me {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text);
+    cursor: pointer;
+    
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      accent-color: var(--metallic-purple);
+    }
+    
+    span {
+      user-select: none;
+    }
+  }
+  
+  .forgot-password {
+    font-size: var(--text-sm);
+    color: var(--metallic-purple);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--duration) var(--ease-out);
+    
+    &:hover {
+      color: var(--text);
+    }
+  }
+}
+
+/* ============================================
+   LOGIN BUTTON
+   ============================================ */
+.btn-login {
+  width: 100%;
+  padding: var(--space-4);
+  background: var(--gradient-metallic);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  transition: all var(--duration) var(--ease-out);
+  box-shadow: var(--shadow-metallic);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-shine);
+    transition: left 0.8s;
+  }
+  
+  span, ion-icon, ion-spinner {
+    position: relative;
+    z-index: 2;
+  }
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(109, 40, 217, 0.4);
+    
+    &::before {
+      left: 100%;
+    }
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .button-spinner {
+    width: 20px;
+    height: 20px;
+  }
+  
+  ion-icon {
+    font-size: 1.25rem;
+  }
+}
+
+/* ============================================
+   DIVIDER
+   ============================================ */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+  
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  
+  span {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+}
+
+/* ============================================
+   REGISTER SECTION
+   ============================================ */
+.register-section {
+  text-align: center;
+  
+  p {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-3);
+  }
+  
+  .btn-register {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: transparent;
+    color: var(--metallic-purple);
+    border: 2px solid var(--metallic-purple);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--duration) var(--ease-out);
+    
+    &:hover {
+      background: var(--metallic-purple);
+      color: white;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.login-footer {
+  text-align: center;
+  
+  p {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin: 0;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .login-container {
+    padding: var(--space-6) var(--space-4);
+    gap: var(--space-6);
+  }
+  
+  .brand-section {
+    .logo-wrapper {
+      width: 64px;
+      height: 64px;
+      
+      .logo-icon {
+        font-size: 2rem;
+      }
+    }
+    
+    .brand-title {
+      font-size: var(--text-xl);
+    }
+    
+    .brand-subtitle {
+      font-size: var(--text-sm);
+    }
+  }
+  
+  .form-section {
+    padding: var(--space-5);
+  }
+  
+  .form-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

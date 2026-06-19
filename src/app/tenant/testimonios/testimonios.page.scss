@@ -1,0 +1,303 @@
+// ============================================
+// TESTIMONIOS - ESTILO OSCURO PROFESIONAL
+// ============================================
+
+.main-toolbar {
+  --background: #0a0a0a !important;
+  --border-color: transparent !important;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2) !important;
+  
+  .back-button {
+    --color: #ffffff !important;
+  }
+  
+  ion-title {
+    font-weight: 700;
+    color: #ffffff !important;
+    font-size: 18px;
+  }
+  
+  .btn-add {
+    --background: linear-gradient(135deg, #6b21a8, #7c3aed);
+    --color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(107, 33, 168, 0.3);
+  }
+}
+
+.main-content {
+  --background: #0a0a0a !important;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+// Page Header
+.page-header {
+  margin-bottom: 32px;
+  
+  .page-title {
+    font-size: 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffffff, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 8px 0;
+  }
+  
+  .page-subtitle {
+    font-size: 15px;
+    color: #9ca3af !important;
+    margin: 0;
+  }
+}
+
+// Stats
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  
+  .stat-badge {
+    flex: 1;
+    background: #1a1a1a;
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    ion-icon {
+      font-size: 24px;
+      color: #a78bfa !important;
+    }
+    
+    span {
+      font-size: 14px;
+      color: #9ca3af !important;
+      
+      strong {
+        color: #ffffff !important;
+        font-weight: 700;
+        margin-left: 4px;
+      }
+    }
+  }
+}
+
+// Testimonios Grid
+.testimonios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.testimonio-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s;
+  
+  &:hover {
+    border-color: rgba(139, 92, 246, 0.3);
+    box-shadow: 0 8px 24px rgba(107, 33, 168, 0.15);
+    transform: translateY(-4px);
+  }
+  
+  .testimonio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    
+    .testimonio-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      .author-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6b21a8, #7c3aed);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff !important;
+        font-weight: 800;
+        font-size: 20px;
+      }
+      
+      .author-info {
+        .author-name {
+          font-size: 16px;
+          font-weight: 700;
+          color: #ffffff !important;
+          margin: 0 0 2px 0;
+        }
+        
+        .author-date {
+          font-size: 12px;
+          color: #6b7280 !important;
+        }
+      }
+    }
+    
+    .testimonio-rating {
+      display: flex;
+      gap: 2px;
+      
+      ion-icon {
+        font-size: 16px;
+        color: #fbbf24 !important;
+      }
+    }
+  }
+  
+  .testimonio-text {
+    background: #0a0a0a;
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    
+    p {
+      font-size: 14px;
+      color: #9ca3af !important;
+      line-height: 1.6;
+      margin: 0;
+      font-style: italic;
+    }
+  }
+  
+  .testimonio-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    
+    .btn-action {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      
+      ion-icon {
+        font-size: 16px;
+      }
+      
+      &.btn-edit {
+        background: rgba(107, 33, 168, 0.15);
+        color: #a78bfa !important;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        
+        &:hover {
+          background: linear-gradient(135deg, #6b21a8, #7c3aed);
+          color: #ffffff !important;
+          border-color: #7c3aed;
+        }
+      }
+      
+      &.btn-delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444 !important;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        
+        &:hover {
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          color: #ffffff !important;
+          border-color: #ef4444;
+        }
+      }
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: #1a1a1a;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 24px;
+  
+  .empty-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, rgba(107, 33, 168, 0.2), rgba(124, 58, 237, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    ion-icon {
+      font-size: 48px;
+      color: #a78bfa !important;
+      opacity: 0.5;
+    }
+  }
+  
+  .empty-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff !important;
+    margin: 0 0 8px 0;
+  }
+  
+  .empty-text {
+    font-size: 15px;
+    color: #9ca3af !important;
+    margin: 0;
+  }
+}
+
+// Loading
+.loading-state {
+  text-align: center;
+  padding: 80px 20px;
+  
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    color: #a78bfa;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: #9ca3af !important;
+    font-size: 15px;
+    margin: 0;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 16px;
+  }
+  
+  .page-header .page-title {
+    font-size: 28px;
+  }
+  
+  .stats-row {
+    flex-direction: column;
+  }
+  
+  .testimonios-grid {
+    grid-template-columns: 1fr;
+  }
+}

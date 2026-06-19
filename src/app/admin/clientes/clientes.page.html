@@ -1,0 +1,105 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="main-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin/dashboard" class="back-button"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Clientes</ion-title>
+  </ion-toolbar>
+  <ion-toolbar class="search-toolbar">
+    <div class="search-box">
+      <ion-icon name="search-outline"></ion-icon>
+      <input 
+        type="text" 
+        [(ngModel)]="busqueda" 
+        placeholder="Buscar por nombre o subdominio..."
+        class="search-input">
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="main-content">
+  <div class="container">
+    
+    <div class="page-header">
+      <div class="header-content">
+        <h1 class="page-title">Clientes</h1>
+        <p class="page-subtitle">{{ clientesFiltrados.length }} clientes encontrados</p>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!cargando && clientesFiltrados.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <ion-icon name="search-outline"></ion-icon>
+      </div>
+      <h2 class="empty-title">No se encontraron clientes</h2>
+      <p class="empty-text">Intenta con otro término de búsqueda</p>
+    </div>
+
+    <!-- Clients List -->
+    <div *ngIf="!cargando && clientesFiltrados.length > 0" class="clients-list">
+      
+      <div *ngFor="let cliente of clientesFiltrados" class="client-card" [class.inactive]="!cliente.estado">
+        
+        <div class="client-header">
+          <div class="client-avatar">
+            <span>{{ cliente.nombre_negocio?.charAt(0) }}</span>
+          </div>
+          <div class="client-info">
+            <h3 class="client-name">{{ cliente.nombre_negocio }}</h3>
+            <div class="client-meta">
+              <ion-icon name="globe-outline"></ion-icon>
+              <span class="subdomain">{{ cliente.subdominio }}.tusventas.com</span>
+            </div>
+          </div>
+          <div class="client-status">
+            <span class="status-badge" [class.active]="cliente.estado">
+              {{ cliente.estado ? 'Activo' : 'Inactivo' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="client-details">
+          <div class="detail-item">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span>{{ cliente.email || 'Sin email' }}</span>
+          </div>
+          <div class="detail-item">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+            <span>{{ cliente.telefono_whatsapp || 'Sin teléfono' }}</span>
+          </div>
+          <div class="detail-item" *ngIf="cliente.suscripciones?.[0]">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>Vence: {{ cliente.suscripciones[0].fecha_vencimiento | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="client-actions">
+          <button class="btn-action btn-toggle" (click)="toggleEstado(cliente)">
+            <ion-icon [name]="cliente.estado ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            <span>{{ cliente.estado ? 'Desactivar' : 'Activar' }}</span>
+          </button>
+          
+          <button class="btn-action btn-extend" (click)="extenderSuscripcion(cliente, 30)">
+            <ion-icon name="add-circle-outline"></ion-icon>
+            <span>+30 días</span>
+          </button>
+          
+          <button class="btn-action btn-delete" (click)="eliminarCliente(cliente.id)">
+            <ion-icon name="trash-outline"></ion-icon>
+            <span>Eliminar</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="cargando" class="loading-state">
+      <ion-spinner name="crescent" class="spinner-large"></ion-spinner>
+      <p>Cargando clientes...</p>
+    </div>
+
+  </div>
+</ion-content>

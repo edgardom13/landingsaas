@@ -1,0 +1,150 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="app-toolbar">
+    <div class="toolbar-inner">
+      <button type="button" class="icon-btn back-btn" routerLink="/tenant/dashboard" aria-label="Volver">
+        <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+      </button>
+      <span >Productos</span>
+      <button type="button" class="btn-add-header" (click)="crearProducto()" aria-label="Nuevo producto">
+        <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+        <span>Nuevo</span>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="dashboard-content" scrollY="true">
+  <div class="content-container">
+
+    <!-- Header de Página -->
+    <header class="page-header">
+      <div class="header-content">
+        <h1 class="page-title">Mis Productos</h1>
+        <p class="page-subtitle">Gestiona los productos de tu tienda</p>
+      </div>
+
+      <div class="header-actions">
+        <div class="search-box">
+          <ion-icon name="search-outline" aria-hidden="true"></ion-icon>
+          <input
+            type="text"
+            [(ngModel)]="busqueda"
+            (input)="filtrarProductos()"
+            placeholder="Buscar productos..."
+            class="search-input">
+        </div>
+
+        <div class="stats-pill">
+          <ion-icon name="cube-outline" aria-hidden="true"></ion-icon>
+          <span>{{ productosFiltrados.length }} <strong>productos</strong></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Empty State -->
+    <div *ngIf="!cargando && productosFiltrados.length === 0" class="empty-state">
+      <div class="empty-icon-wrapper">
+        <div class="empty-icon">
+          <ion-icon name="cube-outline" aria-hidden="true"></ion-icon>
+        </div>
+      </div>
+      <h2 class="empty-title">
+        {{ busqueda ? 'Sin resultados' : 'Tu catálogo está vacío' }}
+      </h2>
+      <p class="empty-text">
+        {{ busqueda
+          ? 'No encontramos productos con ese nombre'
+          : 'Agrega tu primer producto para comenzar a vender' }}
+      </p>
+      <button *ngIf="!busqueda" class="btn-primary" (click)="crearProducto()">
+        <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+        <span>Agregar primer producto</span>
+      </button>
+    </div>
+
+    <!-- Products Grid -->
+    <div *ngIf="!cargando && productosFiltrados.length > 0" class="products-grid">
+      <article *ngFor="let producto of productosFiltrados" class="product-card">
+        
+        <!-- Product Image -->
+        <div class="product-image-wrapper">
+          <div class="product-image" *ngIf="producto.imagen_url">
+            <img [src]="producto.imagen_url" [alt]="producto.nombre">
+          </div>
+          <div class="product-image-placeholder" *ngIf="!producto.imagen_url">
+            <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
+          </div>
+          
+          <!-- Status Badge -->
+          <div class="product-status" [class.active]="producto.disponible">
+            <span class="status-dot"></span>
+            <span>{{ producto.disponible ? 'Activo' : 'Inactivo' }}</span>
+          </div>
+
+          <!-- Offer Badge -->
+          <div class="product-offer" *ngIf="producto.precio_oferta">
+            <span>OFERTA</span>
+          </div>
+          
+          <!-- Image Upload Overlay -->
+          <div class="image-overlay">
+            <input
+              type="file"
+              accept="image/*"
+              (change)="subirImagen(producto, $event)"
+              style="display: none"
+              #fileInput>
+            <button type="button" class="btn-upload" (click)="fileInput.click()">
+              <ion-icon name="camera-outline" aria-hidden="true"></ion-icon>
+              <span>Cambiar imagen</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info">
+          <h3 class="product-name">{{ producto.nombre }}</h3>
+          <p class="product-description">{{ producto.descripcion || 'Sin descripción' }}</p>
+          
+          <div class="product-price-row">
+            <div class="product-price">
+              <span class="price-label">Precio</span>
+              <span class="price">${{ producto.precio | number:'1.0-0' }}</span>
+              <span class="price-currency">COP</span>
+            </div>
+            <div class="product-price-oferta" *ngIf="producto.precio_oferta">
+              <span class="oferta-label">Antes</span>
+              <span class="oferta-price">${{ producto.precio_oferta | number:'1.0-0' }}</span>
+            </div>
+          </div>
+
+          <div class="product-actions">
+            <button type="button" class="btn-action btn-edit" (click)="editarProducto(producto)">
+              <ion-icon name="create-outline" aria-hidden="true"></ion-icon>
+              <span>Editar</span>
+            </button>
+            <button type="button" class="btn-action btn-delete" (click)="eliminarProducto(producto.id!)">
+              <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+              <span>Eliminar</span>
+            </button>
+          </div>
+        </div>
+
+      </article>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="cargando" class="loading-state">
+      <ion-spinner name="crescent" class="loading-spinner"></ion-spinner>
+      <p>Cargando productos...</p>
+    </div>
+
+  </div>
+</ion-content>
+
+<!-- Floating Action Button -->
+<ion-fab *ngIf="productos.length > 0" vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="crearProducto()" class="fab-button">
+    <ion-icon name="add-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

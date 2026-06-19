@@ -1,0 +1,69 @@
+<ion-content class="admin-login-content">
+  <div class="login-container">
+    
+    <!-- Header -->
+    <div class="brand-section">
+      <div class="logo-wrapper">
+        <ion-icon name="shield-checkmark-outline" class="logo-icon"></ion-icon>
+      </div>
+      <h1 class="brand-title">Panel Admin</h1>
+      <p class="brand-subtitle">Acceso restringido - Super Administrador</p>
+    </div>
+
+    <!-- Form -->
+    <div class="form-section">
+      <form (ngSubmit)="login()">
+        <div class="form-group">
+          <label class="form-label">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span>Correo de administrador</span>
+          </label>
+          <div class="input-wrapper">
+            <ion-input 
+              type="email" 
+              [(ngModel)]="email" 
+              name="email"
+              placeholder="admin@tusventas.com"
+              autocomplete="email">
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            <span>Contraseña</span>
+          </label>
+          <div class="input-wrapper">
+            <ion-input 
+              type="password" 
+              [(ngModel)]="password" 
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password">
+            </ion-input>
+          </div>
+        </div>
+
+        <button 
+          type="submit"
+          class="btn-login"
+          [disabled]="cargando || !email || !password">
+          <ion-spinner *ngIf="cargando" name="crescent" class="button-spinner"></ion-spinner>
+          <span *ngIf="!cargando">Ingresar al Panel</span>
+          <ion-icon name="arrow-forward-outline" *ngIf="!cargando"></ion-icon>
+        </button>
+      </form>
+
+      <div class="security-notice">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <span>Conexión segura y encriptada</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      <p>© 2026 LandingSaaS - Panel de Administración</p>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,353 @@
+<ion-content *ngIf="!cargando && cliente" class="landing-v2">
+
+  <!-- ================= HEADER ================= -->
+  <header class="header" [class.scrolled]="isScrolled">
+    <div class="container">
+      
+       <div class="logo-wrapper">
+      <div class="logo-container">
+        <img 
+          *ngIf="cliente?.logo_url" 
+          [src]="cliente.logo_url" 
+          [alt]="cliente.nombre_negocio"
+          class="logo-image">
+        
+        <div *ngIf="!cliente?.logo_url" class="logo-placeholder">
+          <ion-icon name="storefront-outline"></ion-icon>
+        </div>
+      </div>
+      
+      <div class="logo-text" *ngIf="cliente">
+        <span class="brand-name">{{ cliente.nombre_negocio }}</span>
+        
+      </div>
+    </div>
+
+     <div class="header-actions">
+        <a [href]="generarLinkWhatsApp()" target="_blank" class="action-btn whatsapp">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+          <span class="btn-label" *ngIf="!isMobile">WhatsApp</span>
+        </a>
+
+        <div class="search-desktop" *ngIf="!isMobile">
+          <div class="search-box">
+            <ion-icon name="search-outline"></ion-icon>
+            <input type="text" [(ngModel)]="busquedaProducto" (input)="filtrarProductos()" placeholder="Buscar...">
+          </div>
+        </div>
+
+        <button class="action-btn cart" (click)="verCarrito()">
+          <ion-icon name="cart-outline"></ion-icon>
+          <span class="cart-badge" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
+        
+        </button>
+
+        <button class="menu-toggle" (click)="toggleMenu()" *ngIf="isMobile">
+          <ion-icon [name]="menuOpen ? 'close-outline' : 'menu-outline'"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu" [class.open]="menuOpen" *ngIf="isMobile">
+      <nav class="mobile-nav">
+        <a href="#" (click)="closeMenu()">Inicio</a>
+        <a href="#productos" (click)="closeMenu()">Productos</a>
+        <a [href]="generarLinkWhatsApp()" target="_blank" (click)="closeMenu()">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero-section" [class.has-image]="cliente.hero_1_imagen">
+  
+  <!-- Solo imagen de fondo si existe -->
+  <div class="hero-bg" *ngIf="cliente.hero_1_imagen">
+    <img [src]="cliente.hero_1_imagen" [alt]="cliente.hero_1_titulo" loading="eager">
+  </div>
+
+  <!-- Fondo sólido si no hay imagen -->
+  <div class="hero-solid-bg" *ngIf="!cliente.hero_1_imagen"></div>
+
+  <div class="container">
+    <div class="hero-wrapper">
+      <div class="hero-content">
+        
+        <h1 class="hero-title" [style.fontSize]="cliente.fuente_titulo">
+          <span class="title-line" *ngFor="let line of getHeroTitleLines()">{{ line }}</span>
+        </h1>
+
+        <p class="hero-description" [style.fontSize]="cliente.fuente_subtitulo">
+          {{ cliente.hero_1_subtitulo || 'Descubre nuestros productos exclusivos' }}
+        </p>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            <span>Compra Segura</span>
+          </div>
+          <div class="stat-item">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>Entrega 24-48h</span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-hero-primary" (click)="scrollToProductos()" [style.borderRadius]="cliente.boton_border_radius">
+            <ion-icon name="cart-outline"></ion-icon>
+            <span>
+              <strong>Comprar Ahora</strong>
+              <small>Ver catálogo completo</small>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Producto destacado -->
+      <div class="hero-visual" *ngIf="productoOferta?.imagen_url">
+        <div class="product-showcase">
+          <img [src]="productoOferta.imagen_url" [alt]="productoOferta.nombre" class="showcase-image" loading="eager" style="border-radius: 25px;">
+          
+          <div class="floating-badge price-badge">
+            <span class="badge-label">Desde</span>
+            <span class="badge-price">${{ productoOferta.precio | number:'1.0-0' }}</span>
+          </div>
+
+          <div class="floating-badge discount-badge" *ngIf="productoOferta.precio_oferta">
+            <span class="discount-percent">-{{ getDescuentoPorcentaje(productoOferta) }}%</span>
+            <span class="discount-text">OFF</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- ================= SEARCH ================= -->
+  <section class="search-section">
+    <div class="container">
+      <div class="search-header">
+        <div class="search-title">
+          <ion-icon name="search-outline"></ion-icon>
+          <div>
+            <h3>Encuentra lo que buscas</h3>
+            <p>Explora nuestro catálogo completo</p>
+          </div>
+        </div>
+        <div class="results-counter" *ngIf="busquedaProducto">
+          <span class="count">{{ productosFiltrados.length }}</span>
+          <span class="label">producto{{ productosFiltrados.length !== 1 ? 's' : '' }}</span>
+        </div>
+      </div>
+
+      <div class="search-container">
+        <div class="search-box">
+          <div class="search-icon-wrapper">
+            <ion-icon name="search-outline"></ion-icon>
+          </div>
+          <input type="text" [(ngModel)]="busquedaProducto" (input)="filtrarProductos()" placeholder="Buscar por nombre, descripción..." class="search-input">
+          <button *ngIf="busquedaProducto" class="clear-btn" (click)="limpiarBusqueda()">
+            <ion-icon name="close-circle-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="section-header" style="margin-top: 40px;">
+        <div class="section-tag">
+          <ion-icon name="cube-outline"></ion-icon>
+          <span>Nuestro Catálogo</span>
+        </div>
+        <h2 class="section-title">Productos Destacados</h2>
+        <p class="section-subtitle">Encuentra los mejores productos para ti</p>
+      </div>
+  </section>
+
+  <!-- ================= PRODUCTS ================= -->
+  <section id="productos" class="products-section">
+    <div class="container">
+      
+
+      <div *ngIf="productosFiltrados?.length" class="products-grid">
+        <div *ngFor="let producto of productosFiltrados; let i = index" class="product-card" [style.animation-delay]="(i * 0.1) + 's'">
+          <div class="product-image-wrapper">
+            <div class="product-image">
+              <img *ngIf="producto.imagen_url" [src]="producto.imagen_url" [alt]="producto.nombre" loading="lazy">
+              <div *ngIf="!producto.imagen_url" class="image-placeholder">
+                <ion-icon name="image-outline"></ion-icon>
+              </div>
+            </div>
+
+            <div class="product-badges">
+              <div *ngIf="producto.precio_oferta" class="discount-badge">
+                <ion-icon name="flash-outline"></ion-icon>
+                <span>-{{ getDescuentoPorcentaje(producto) }}%</span>
+              </div>
+             
+            </div>
+          </div>
+
+          <div class="product-info">
+            <h3 class="product-name">{{ producto.nombre }}</h3>
+            <p class="product-description">{{ producto.descripcion || 'Producto de alta calidad' }}</p>
+
+            <div class="product-pricing">
+              <div class="price-group">
+                <span class="current-price">${{ producto.precio | number:'1.0-0' }}</span>
+                <span *ngIf="producto.precio_oferta" class="original-price">${{ producto.precio_oferta | number:'1.0-0' }}</span>
+              </div>
+            </div>
+
+            <button class="btn-add-cart" (click)="agregarAlCarrito(producto)" [style.borderRadius]="cliente.boton_border_radius">
+              <ion-icon name="cart-outline"></ion-icon>
+              <span>Agregar al Carrito</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!productosFiltrados?.length" class="empty-state">
+        <div class="empty-icon">
+          <ion-icon name="search-outline"></ion-icon>
+        </div>
+        <h3>No encontramos productos</h3>
+        <p *ngIf="busquedaProducto">No hay resultados para "<strong>{{ busquedaProducto }}</strong>"</p>
+        <p *ngIf="!busquedaProducto">Aún no hay productos disponibles</p>
+        <button class="btn-clear-search" (click)="limpiarBusqueda()" *ngIf="busquedaProducto">
+          <ion-icon name="refresh-outline"></ion-icon>
+          <span>Limpiar búsqueda</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box">
+        <h2>¿Listo para comprar?</h2>
+        <p>Descubre nuestros productos más vendidos.</p>
+        <button class="btn-primary" (click)="scrollToProductos()" [style.borderRadius]="cliente.boton_border_radius">
+          Ver Productos
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-col brand-col">
+          <div class="footer-logo">
+            <img *ngIf="cliente.logo_url" [src]="cliente.logo_url" [alt]="cliente.nombre_negocio" class="footer-logo-img">
+            <div *ngIf="!cliente.logo_url" class="footer-logo-placeholder">
+              <ion-icon name="storefront-outline"></ion-icon>
+            </div>
+            <div class="footer-logo-text">
+              <h3>{{ cliente.nombre_negocio }}</h3>
+              <span class="logo-accent">STORE</span>
+            </div>
+          </div>
+          <p class="brand-description">{{ cliente.hero_1_subtitulo || 'Tu tienda de confianza' }}</p>
+          <div class="trust-badges">
+            <div class="trust-item">
+              <ion-icon name="shield-checkmark-outline"></ion-icon>
+              <span>Compra Segura</span>
+            </div>
+            <div class="trust-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Envío Rápido</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-title"><span class="title-line"></span>Navegación</h4>
+          <ul class="footer-links">
+            <li><a href="#"><ion-icon name="chevron-forward-outline"></ion-icon><span>Inicio</span></a></li>
+            <li><a href="#productos" (click)="scrollToProductos()"><ion-icon name="chevron-forward-outline"></ion-icon><span>Productos</span></a></li>
+            <li><a [href]="generarLinkWhatsApp()" target="_blank"><ion-icon name="chevron-forward-outline"></ion-icon><span>Contacto</span></a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-title"><span class="title-line"></span>Contacto</h4>
+          <ul class="footer-contact">
+            <li>
+              <div class="contact-icon"><ion-icon name="logo-whatsapp"></ion-icon></div>
+              <div class="contact-info">
+                <span class="contact-label">WhatsApp</span>
+                <a [href]="generarLinkWhatsApp()" target="_blank" class="contact-value">{{ cliente.telefono_whatsapp }}</a>
+              </div>
+            </li>
+            <li *ngIf="cliente.email">
+              <div class="contact-icon"><ion-icon name="mail-outline"></ion-icon></div>
+              <div class="contact-info">
+                <span class="contact-label">Email</span>
+                <a [href]="'mailto:' + cliente.email" class="contact-value">{{ cliente.email }}</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-title"><span class="title-line"></span>Síguenos</h4>
+          <p class="social-description">Conéctate con nosotros</p>
+          <div class="social-links">
+            <a *ngFor="let red of cliente.redes_sociales" [href]="red.url" target="_blank" class="social-link">
+              <ion-icon [name]="getSocialIcon(red.nombre)"></ion-icon>
+              <span class="social-tooltip">{{ red.nombre }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-methods">
+        <span class="payment-label">Métodos de pago aceptados:</span>
+        <div class="payment-icons">
+          <div class="payment-icon"><ion-icon name="card-outline"></ion-icon><span>Tarjeta</span></div>
+          <div class="payment-icon"><ion-icon name="cash-outline"></ion-icon><span>Efectivo</span></div>
+          <div class="payment-icon"><ion-icon name="phone-portrait-outline"></ion-icon><span>Transferencia</span></div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom-content">
+          <div class="copyright">
+            <ion-icon name="copyright-outline"></ion-icon>
+            <span>{{ today | date:'yyyy' }} <strong>{{ cliente.nombre_negocio }}</strong>. Todos los derechos reservados.</span>
+          </div>
+          <div class="powered-by">
+            <span>Powered by</span>
+            <strong>LandingSaaS</strong>
+            <ion-icon name="rocket-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ✅ CARRITO FLOTANTE CORREGIDO (sin el código basura) -->
+  <div *ngIf="cartItemCount > 0" class="cart-fab" (click)="verCarrito()">
+    <ion-icon name="cart-outline"></ion-icon>
+    <span>{{ cartItemCount }}</span>
+    <strong>${{ getTotalCart() | number:'1.0-0' }}</strong>
+  </div>
+
+</ion-content>
+
+<!-- LOADING -->
+<ion-content *ngIf="cargando" class="loading-content">
+  <div class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Cargando...</p>
+  </div>
+</ion-content>
+
+<!-- ERROR -->
+<ion-content *ngIf="!cargando && error" class="error-content">
+  <div class="error-container">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h2>{{ error }}</h2>
+    <button routerLink="/">Volver</button>
+  </div>
+</ion-content>
